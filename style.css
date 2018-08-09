@@ -1,6 +1,21 @@
-.color-primary {
-	background: black!important;
+.bg-primary {
+	background: #5e5e79!important;
 }
 
-.color-secondary {
-	background: grey!important;
+.list-group-item-primary {
+	background: #5e5e7944!important;
+}
+
+.list-group-item {
+	color: #3e3e50!important;
+}
+
+.btn-secondary {
+	background: #00000057!important;
+	border-color: #182027!important;
+}
+
+.img-thumbnail {
+	background-color: #5e5e79!important;
+	border: 1px solid #182027!important;	
+}
