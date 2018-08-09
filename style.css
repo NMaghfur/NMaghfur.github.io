@@ -1,39 +1,6 @@
-body {
-  font-family: Arial;
-  line-height: 1.4em;
-  font-size: 9pt;
-  margin: 0px;
+.color-primary {
+	background: black!important;
 }
 
-article {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-div.top div {display: flex; flex-grow: 1; flex-basis: 0px}
-@media only screen and (min-width: 768px) {
-	div.top div {flex-direction: row; display: flex; flex-grow: 1; flex-basis: 0px}
-}
-
-div.post {border: 1px solid #000}
-div.post p {margin-top: auto; margin-bottom: auto; margin-left: 10px; margin-right: 10px}
-
-tr {padding: 0px; margin: 0px}
-
-div.tpost {width: 202px; border: 1px solid black}
-div.tpost p {margin: 15px; font-size: 8pt;}
-
-.page {background-color: #fff; width: 66%; margin-left: auto; margin-right: auto; border: 1px solid #000;
-		margin-bottom: -1px; margin-top: -1px; padding-top: 0px;
-		padding-left: 100px; padding-right: 100px}
-
-.para {width: 66%; margin-left: auto; margin-right: auto}
-
-h1 {display: inline;}
-
-.datetime {display: block;}
-
-time { font-size: 0.5; color:#888;}
-
-img {border: 1px solid #000000; margin: 0px; filter: grayscale(100%);}
-img:hover {border: 1px solid #000000; margin: 0px; filter: grayscale(0%); filter: saturate(150%);}
+.color-secondary {
+	background: grey!important;
