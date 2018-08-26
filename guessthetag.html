@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Guess the Tag</title>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+
+	<style type="text/css">
+		li {
+			display: inline-block;
+		}
+	</style>
+
+</head>
+<body>
+	<div id="tag-box" class="container-fluid flex-row d-flex justify-content-center">
+	</div>
+	<div id="play-again" class="btn-primary text-center text-uppercase p-3">Correct! Click to play again.</div>
+	<div id="play-again-wrong" class="btn-primary text-center text-uppercase p-3">Correct answer: <span id="correct-answer">answer</span>. Click to play again.</div>
+	<div id="image-list" class="grid container-fluid mt-4">
+	</div>
+</body>
+<script type="text/javascript">
+
+
+
+	var tag = ""
+	const init_keys = ["kittens", "nature", "fashion", "outdoors", "animals", "dogs", "world", "design", "meme", "monster", "moba", "malaysia", "technology"]
+
+	// DOM elements
+	const correct_answer = document.getElementById("correct-answer")
+	const tag_box = document.getElementById("tag-box")
+	const play_button = document.getElementById("play-again")
+	const wrong_play_button = document.getElementById("play-again-wrong")
+
+
+	play_button.onclick = main
+	wrong_play_button.onclick = main
+
+	main()
+
+	function main(){
+		play_button.classList.add("d-none")
+		wrong_play_button.classList.add("d-none")
+
+		tag = init_keys[Math.floor(Math.random() * init_keys.length)]
+
+		redisplay(tag)
+
+		let displayed_tags = []
+		displayed_tags.push(tag)
+
+		// try to get 4 random tags for the user to guess
+		for (var i = 4 ;i >= 0; i--) {
+			let addition = init_keys[Math.floor(Math.random() * init_keys.length)]
+			if (!displayed_tags.includes(addition)){
+					displayed_tags.push(addition)	
+			}
+		}
+
+		// display random tags as buttons
+		for (var i = displayed_tags.length - 1; i >= 0; i--) {
+			createTagButton(displayed_tags[i])
+		}
+
+
+	}
+
+	function clearTagBox(){
+		for (var i = tag_box.childNodes.length - 1; i >= 0; i--) {
+			tag_box.removeChild(tag_box.childNodes[i])
+		}
+	}
+
+	function randomColor(){
+		const r = Math.floor(Math.random() * 255)
+		const g = Math.floor(Math.random() * 255)
+		const b = Math.floor(Math.random() * 255)
+		const a = 0.3
+		return "rgba("+r+","+g+","+b+","+a+")"
+	}
+
+	function createTagButton(tag_name){
+		let div = document.createElement("div")
+		div.setAttribute("class","btn-primary text-center text-uppercase p-3")
+		div.style["background-color"] = randomColor()
+		div.style.color = "#000000"
+		div.innerHTML = tag_name
+		div.onclick = function(event){
+			// correct answer
+			if (event.target.innerHTML == tag) {
+				clearTagBox()
+				play_button.classList.toggle("d-none")
+			} else {
+				// wrong answer
+				clearTagBox()
+				correct_answer.innerHTML = tag
+				wrong_play_button.classList.toggle("d-none")
+			}
+		}
+		tag_box.appendChild(div)	
+	}
+
+	function redisplay (query){
+		console.log(query)
+		const unlist = document.getElementById("image-list")			
+
+		for (var i = unlist.childNodes.length - 1; i >= 0; i--) {
+			unlist.removeChild(unlist.childNodes[i])
+		}
+
+		fetch("https://api.tumblr.com/v2/tagged?tag=" +query+ "&api_key=igWsESso4al9d5yxazDVQgvtsrnaeMJ8VtSph4WKq0X8jPPpad").then(
+			function(reply) {
+				return reply.json();
+			}).then(function(json){
+				data = json.response
+				let count = 0
+
+				for (var i = data.length - 1; i >= 0; i--) {
+					if (data[i].photos != undefined){
+						let img = document.createElement("img");
+						img.src = data[i].photos[0].alt_sizes[data[i].photos[0].alt_sizes.length - 3].url
+						img.onload = function(){
+							count += 1
+							if (count == unlist.childNodes.length){
+
+								msnry.layout();
+							}
+						}
+						let li = document.createElement("div");
+						li.classList.add("grid-item")
+						li.appendChild(img)
+						unlist.appendChild(li)
+					}
+				}
+
+				var elem = document.querySelector('.grid');
+				var msnry = new Masonry( elem, {
+		        itemSelector: '.grid-item',
+		        fitWidth: true,
+		        height: 100
+				});
+			})
+	}
+
+	
+</script>
+</html>
